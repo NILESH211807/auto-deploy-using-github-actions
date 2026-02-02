@@ -7,21 +7,20 @@ on:
 
 jobs:
   deploy:
-  runs-on: ubuntu-latest
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
 
-  steps:
-    - name: Checkout code
-      uses: actions/checkout@v4
-
-    - name: Deploy Via SSH
-      uses: appleboy/ssh-action@v1.0.3
-      with:
-        host: ${{ secrets.SSH_HOST }}
-        username: ${{ secrets.SSH_USER }}
-        key: ${{ secrets.SSH_KEY }}
-        port: 2775
-        script: |
-          cd /root/auto-deploy-using-github-actions || exit 1
-          git pull origin master || exit 1
-          docker compose down
-          docker compose up -d --build
+      - name: Deploy Via SSH
+        uses: appleboy/ssh-action@v1.0.3
+        with:
+          host: ${{ secrets.SSH_HOST }}
+          username: ${{ secrets.SSH_USER }}
+          key: ${{ secrets.SSH_KEY }}
+          port: 2775
+          script: |
+            cd /root/auto-deploy-using-github-actions
+            git pull origin master
+            docker compose down
+            docker compose up -d --build
